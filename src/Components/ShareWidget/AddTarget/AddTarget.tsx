@@ -22,6 +22,20 @@ const AddTarget = () => {
         addInvitedPeople([...selectedPep, ...selectedCat]);
     },[]);
 
+    useEffect(() => {
+        const closeModalOnEsc = (e: any) => {
+            if(e.key === "Escape"){
+                setShowModal(false);
+            }
+        }
+        if(showModal){
+            document.addEventListener('keydown', closeModalOnEsc);
+        }else {
+            document.removeEventListener('keydown', closeModalOnEsc);
+        }
+
+    },[showModal]);
+
     return(
         <div className="share-widget__add">
             <div className='share-widget__add-input' onClick={() => setShowModal(true)}>

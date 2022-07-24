@@ -47,6 +47,9 @@ const SelectModal:React.FC<Props> = ({closeModal, addInvitedPeople, sortedPeople
         }
     },[sortedPeople, sortedCategory]);
 
+    useEffect(() => {
+        document.getElementById('select-modal-input')?.focus();
+    },[])
 
     const overlayClickHandler = (e: React.MouseEvent<HTMLDivElement>) => {
         if((e.target as HTMLDivElement).id === "overlay"){
@@ -142,6 +145,20 @@ const SelectModal:React.FC<Props> = ({closeModal, addInvitedPeople, sortedPeople
         addInvitedPeople(invitedPeople);
         closeModal();
     }
+    
+    const inputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if(e.key === 'Tab'){
+            if(e.shiftKey){
+                (document.getElementsByClassName('share-widget__learn__text')[0] as HTMLElement).focus()
+            }
+        }
+    }
+
+    const learnKeyDown = (e: React.KeyboardEvent<HTMLAnchorElement>) => {
+        if(e.key === 'Tab'){
+            document.getElementById('select-modal-input')?.focus();
+        }
+    }
 
     return (
         <div id="overlay" className="overlay" onClick={(e) => overlayClickHandler(e)}>
@@ -158,6 +175,7 @@ const SelectModal:React.FC<Props> = ({closeModal, addInvitedPeople, sortedPeople
                             className="select-modal__header__text" 
                             placeholder={Object.keys(selectedValues).length > 0 ? '' : 'Search emails, names or groups'}
                             onChange={(e) => debounce(onChangeHandler, 500)(e)}
+                            onKeyDown={inputKeyDown}
                         />
                     </div>
                     <DropDown 
@@ -187,7 +205,7 @@ const SelectModal:React.FC<Props> = ({closeModal, addInvitedPeople, sortedPeople
                         <></>
                     }
                 </div>
-                <Learn />
+                <Learn onKeyDownHander={learnKeyDown}/>
             </div>
         </div>
     )
