@@ -12,6 +12,8 @@
 
 .item .item__image, .item .item__letter {
     justify-self: center;
+    height: 24px;
+    width: 24px;
 }
 
 .item .item__letter {

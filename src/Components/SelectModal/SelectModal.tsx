@@ -50,6 +50,18 @@ const SelectModal:React.FC<Props> = ({closeModal, addInvitedPeople, sortedPeople
 
     const overlayClickHandler = (e: React.MouseEvent<HTMLDivElement>) => {
         if((e.target as HTMLDivElement).id === "overlay"){
+            Object.keys(selectedValues).filter((a) => {
+                let categoryIndex = sortedCategory.findIndex((b) => b.name === a);
+                if(categoryIndex !== -1){
+                    sortedCategory[categoryIndex].added = false;
+                    setSortedCategory([...sortedCategory]);
+                }
+                let personIndex = sortedPeople.findIndex((b) => b.name === a);
+                if(personIndex !== -1){
+                    sortedPeople[personIndex].added = false;
+                    setSortedPeople([...sortedPeople]);
+                }
+            });
             closeModal();
         }
     };
@@ -92,9 +104,29 @@ const SelectModal:React.FC<Props> = ({closeModal, addInvitedPeople, sortedPeople
     }
 
     const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const regex = new RegExp(`^${e.target.value}`, 'i');
-        setSuggestedNames(sortedPeople.filter(people => people.added === false).filter(people => regex.test(people.name)));
-        setSuggestedCategories(sortedCategory.filter(category => category.added === false).filter(category => regex.test(category.name)));
+        if(e.target.value === ''){
+            let notAddedPep = sortedPeople.filter((a) => a.added === false);
+            let notAddedCat = sortedCategory.filter((a) => a.added === false);
+            if(notAddedPep.length > 1){
+                setSuggestedNames([notAddedPep[0], notAddedPep[1]]);
+            }else if(notAddedPep.length === 1){
+                setSuggestedNames([notAddedPep[0]]);
+            }else {
+                setSuggestedNames([]);
+            }
+    
+            if(notAddedCat.length > 1){
+                setSuggestedCategories([notAddedCat[0], notAddedCat[1]]);
+            }else if(notAddedCat.length === 1){
+                setSuggestedCategories([notAddedCat[0]]);
+            }else {
+                setSuggestedCategories([]);
+            }
+        }else {
+            const regex = new RegExp(`^${e.target.value}`, 'i');
+            setSuggestedNames(sortedPeople.filter(people => people.added === false).filter(people => regex.test(people.name)));
+            setSuggestedCategories(sortedCategory.filter(category => category.added === false).filter(category => regex.test(category.name)));
+        }
     };
 
     const accessChangeHandler = (val: string) => access = val as accessModifier;

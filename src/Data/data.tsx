@@ -1,4 +1,6 @@
 import Avatar from '../Images/Avatar.png';
+import AvatarS from '../Images/Avatar.svg';
+import AvatarL from '../Images/LadyAvatar.png';
 import Oslash from '../Images/oslash.svg';
 import { accessModifier } from '../types';
 
@@ -24,6 +26,33 @@ let data =  {
             access: accessModifier.FULL_ACCESS,
             added: false,
         },
+        {
+            name: "Carloine Walker",
+            description: 'caroline_walker@mail.com',
+            access: accessModifier.FULL_ACCESS,
+            displayIcon: AvatarL,
+            added: false,
+        },
+        {
+            name: "Carl Sam",
+            description: 'carl_sam@mail.com',
+            access: accessModifier.FULL_ACCESS,
+            displayIcon: AvatarS,
+            added: false,
+        },
+        {
+            name: "Devon Dudly",
+            description: 'devon_dudly@mail.com',
+            access: accessModifier.FULL_ACCESS,
+            displayIcon: AvatarS,
+            added: false,
+        },
+        {
+            name: "Zack Stud",
+            description: 'zack_stud@mail.com',
+            access: accessModifier.FULL_ACCESS,
+            added: false,
+        },
     ],
     "category": [
         {
@@ -44,7 +73,25 @@ let data =  {
             description: '25 workspace members',
             access: accessModifier.CAN_EDIT,
             added: true,
-        }
+        },
+        {
+            name: "Operations",
+            description: '20 workspace members',
+            access: accessModifier.FULL_ACCESS,
+            added: false,
+        },
+        {
+            name: "Support",
+            description: '35 workspace members',
+            access: accessModifier.FULL_ACCESS,
+            added: false,
+        },
+        {
+            name: "Incidents",
+            description: '2 workspace members',
+            access: accessModifier.FULL_ACCESS,
+            added: false,
+        },
     ]
 }
 

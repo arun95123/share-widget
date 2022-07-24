@@ -9,7 +9,7 @@ const TargetItem:React.FC<item> = ({displayIcon, name, description, access}) => 
             {displayIcon ? 
                 <img src={displayIcon} alt="decorative" className="target-item__logo" />
             :
-                <div className='target-item___letter'>{name.slice(0,1).toUpperCase()}</div>
+                <div className='target-item__letter'>{name.slice(0,1).toUpperCase()}</div>
             }
             <div className="target-item__text">
                 <h6>{name}</h6>

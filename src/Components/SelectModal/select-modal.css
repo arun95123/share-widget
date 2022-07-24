@@ -12,6 +12,8 @@
 .select-modal {
     margin: auto;
     width: 512px;
+    max-height: 430px;
+    overflow-y: scroll;
     border: 1px solid #E5E7EB;
     border-radius: 8px;
 }

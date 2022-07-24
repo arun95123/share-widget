@@ -1,5 +1,7 @@
 .share-widget__add {
     padding: 16px 12px;
+    max-height: 350px;
+    overflow-y: scroll;
 }
 
 .share-widget__add-input {
