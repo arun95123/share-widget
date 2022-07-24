@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import TargetItem from './TargetItem/TargetItem';
 import SelectModal from '../../SelectModal/SelectModal';
 import { item } from '../../../types';
@@ -7,14 +7,20 @@ import './add-target.css';
 
 const AddTarget = () => {
     const [showModal, setShowModal] = useState(false);
-    let sortedPeople = data.people.sort((a, b ) => a.name.localeCompare(b.name));
-    let selectedPeople = sortedPeople.filter((a) => a.added === true);
-    let sortedCategory = data.category.sort((a, b ) => a.name.localeCompare(b.name));
-    let selectedCategory = sortedCategory.filter((a) => a.added === true);
-    // let [sortedPeople, setSortedPeople] = useState([] as item[]);
-    // let [sortedCategory, setSortedCategory] = useState([] as item[]);
+    let [sortedPeople, setSortedPeople] = useState([] as item[]);
+    let [sortedCategory, setSortedCategory] = useState([] as item[]);
 
-    let [invitedPeople, addInvitedPeople] = useState([...selectedPeople, ...selectedCategory] as item[]);
+    let [invitedPeople, addInvitedPeople] = useState([] as item[]);
+
+    useEffect(() => {
+        let sortedPep = data.people.sort((a, b ) => a.name.localeCompare(b.name));
+        let selectedPep = sortedPep.filter((a) => a.added === true);
+        let sortedCat = data.category.sort((a, b ) => a.name.localeCompare(b.name));
+        let selectedCat = sortedCat.filter((a) => a.added === true);
+        setSortedPeople(sortedPep);
+        setSortedCategory(sortedCat);
+        addInvitedPeople([...selectedPep, ...selectedCat]);
+    },[]);
 
     return(
         <div className="share-widget__add">
@@ -40,6 +46,10 @@ const AddTarget = () => {
                 showModal ? 
                     <SelectModal 
                         closeModal={() => setShowModal(false)}
+                        sortedPeople={sortedPeople}
+                        sortedCategory={sortedCategory}
+                        setSortedPeople={setSortedPeople}
+                        setSortedCategory={setSortedCategory}
                         addInvitedPeople={(newList: item[]) => addInvitedPeople([...invitedPeople, ...newList])}
                     /> 
                 : 

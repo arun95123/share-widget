@@ -28,6 +28,7 @@
 }
 
 .custom-drop-down__options {
+    z-index: 1;
     padding: 8px;
     width: 124px;
     top: 22px;

@@ -1,8 +1,7 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import DropDown from '../DropDown/DropDown';
 import Learn from '../Learn/Learn';
 import Category from './Category/Category';
-import data from '../../Data/data';
 import { debounce } from '../../Utils';
 import './select-modal.css';
 import SelectedItem from './SelectedItem/SelectedItem';
@@ -11,21 +10,42 @@ import { accessModifier, item } from '../../types';
 interface Props {
     closeModal: Function;
     addInvitedPeople: Function;
+    sortedPeople: item[];
+    sortedCategory: item[];
+    setSortedPeople: Function;
+    setSortedCategory: Function;
 }
 
 interface selected {
     [key: string]: item
 }
 
-const SelectModal:React.FC<Props> = ({closeModal, addInvitedPeople}) => {
+const SelectModal:React.FC<Props> = ({closeModal, addInvitedPeople, sortedPeople, sortedCategory, setSortedPeople, setSortedCategory}) => {
     let access = accessModifier.FULL_ACCESS;
-    const sortedPeople = data.people.sort((a, b ) => a.name.localeCompare(b.name)).filter((a) => a.added === false);
-    const sortedCategory = data.category.sort((a, b ) => a.name.localeCompare(b.name)).filter((a) => a.added === false);
-    console.log(sortedPeople);
 
-    const [suggestedNames, setSuggestedNames] = useState([sortedPeople[0], sortedPeople[1]]);
-    const [suggestedCategories, setSuggestedCategories] = useState([sortedCategory[0], sortedCategory[1]]);
+    const [suggestedNames, setSuggestedNames] = useState([] as item[]);
+    const [suggestedCategories, setSuggestedCategories] = useState([] as item[]);
     const [selectedValues, setSelectedValues] = useState({} as selected);
+
+    useEffect(() => {
+        let notAddedPep = sortedPeople.filter((a) => a.added === false);
+        let notAddedCat = sortedCategory.filter((a) => a.added === false);
+        if(notAddedPep.length > 1){
+            setSuggestedNames([notAddedPep[0], notAddedPep[1]]);
+        }else if(notAddedPep.length === 1){
+            setSuggestedNames([notAddedPep[0]]);
+        }else {
+            setSuggestedNames([]);
+        }
+
+        if(notAddedCat.length > 1){
+            setSuggestedCategories([notAddedCat[0], notAddedCat[1]]);
+        }else if(notAddedCat.length === 1){
+            setSuggestedCategories([notAddedCat[0]]);
+        }else {
+            setSuggestedCategories([]);
+        }
+    },[sortedPeople, sortedCategory]);
 
 
     const overlayClickHandler = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -34,26 +54,47 @@ const SelectModal:React.FC<Props> = ({closeModal, addInvitedPeople}) => {
         }
     };
 
-    const itemOnClick = (e: React.MouseEvent<HTMLUListElement>) => {
+    const peopleItemOnClick = (e: React.MouseEvent<HTMLUListElement>) => {
         let data = JSON.parse(e.currentTarget.dataset.value || '');
         setSelectedValues({...selectedValues, [data.name]: data});
+        let personIndex = sortedPeople.findIndex((a) => a.name === data.name);
+        if(personIndex !== -1){
+            sortedPeople[personIndex].added = true;
+            setSortedPeople([...sortedPeople]);
+        }
+        document.getElementById('select-modal-input')?.focus();
+    }
+
+    const categoryItemOnClick = (e: React.MouseEvent<HTMLUListElement>) => {
+        let data = JSON.parse(e.currentTarget.dataset.value || '');
+        setSelectedValues({...selectedValues, [data.name]: data});
+        let categoryIndex = sortedCategory.findIndex((a) => a.name === data.name);
+        if(categoryIndex !== -1){
+            sortedCategory[categoryIndex].added = true;
+            setSortedCategory([...sortedCategory]);
+        }
         document.getElementById('select-modal-input')?.focus();
     }
 
     const removeSelected = (name: string) => {
         delete selectedValues[name];
         setSelectedValues({...selectedValues});
+        let categoryIndex = sortedCategory.findIndex((a) => a.name === name);
+        if(categoryIndex !== -1){
+            sortedCategory[categoryIndex].added = false;
+            setSortedCategory([...sortedCategory]);
+        }
+        let personIndex = sortedPeople.findIndex((a) => a.name === name);
+        if(personIndex !== -1){
+            sortedPeople[personIndex].added = false;
+            setSortedPeople([...sortedPeople]);
+        }
     }
 
     const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if(e.target.value === ''){
-            setSuggestedNames([sortedPeople[0], sortedPeople[1]]);
-            setSuggestedCategories([sortedCategory[0], sortedCategory[1]]);
-        }else {
-            const regex = new RegExp(`^${e.target.value}`, 'i');
-            setSuggestedNames(sortedPeople.filter(people => regex.test(people.name)));
-            setSuggestedCategories(sortedCategory.filter(category => regex.test(category.name)));
-        }
+        const regex = new RegExp(`^${e.target.value}`, 'i');
+        setSuggestedNames(sortedPeople.filter(people => people.added === false).filter(people => regex.test(people.name)));
+        setSuggestedCategories(sortedCategory.filter(category => category.added === false).filter(category => regex.test(category.name)));
     };
 
     const accessChangeHandler = (val: string) => access = val as accessModifier;
@@ -99,7 +140,7 @@ const SelectModal:React.FC<Props> = ({closeModal, addInvitedPeople}) => {
                         <Category 
                             categoryName='Select a person'
                             items={suggestedNames}
-                            itemClickHandler={itemOnClick}
+                            itemClickHandler={peopleItemOnClick}
                         />
                     :
                         <></>
@@ -108,7 +149,7 @@ const SelectModal:React.FC<Props> = ({closeModal, addInvitedPeople}) => {
                         <Category 
                             categoryName='Select a group'
                             items={suggestedCategories}
-                            itemClickHandler={itemOnClick}
+                            itemClickHandler={categoryItemOnClick}
                         />
                     :
                         <></>
