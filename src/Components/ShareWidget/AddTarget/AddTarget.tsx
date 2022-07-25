@@ -1,11 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import TargetItem from './TargetItem/TargetItem';
 import SelectModal from '../../SelectModal/SelectModal';
-import { item } from '../../../types';
-import data from '../../../Data/data';
+import { item, inputData } from '../../../types';
 import './add-target.css';
 
-const AddTarget = () => {
+interface Props {
+    data: inputData
+}
+
+const AddTarget:React.FC<Props> = ({data}) => {
     const [showModal, setShowModal] = useState(false);
     let [sortedPeople, setSortedPeople] = useState([] as item[]);
     let [sortedCategory, setSortedCategory] = useState([] as item[]);

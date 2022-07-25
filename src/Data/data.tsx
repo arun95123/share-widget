@@ -34,7 +34,7 @@ let data =  {
             added: false,
         },
         {
-            name: "Carloine Walker",
+            name: "Carloine Palker",
             description: 'caroline_walker@mail.com',
             access: accessModifier.FULL_ACCESS,
             displayIcon: AvatarL,

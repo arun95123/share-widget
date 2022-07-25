@@ -12,3 +12,8 @@ export enum accessModifier {
     CAN_VIEW = 'Can view',
     NO_ACCESS = 'No access'
 }
+
+export interface inputData {
+    people: item[],
+    category: item[],
+}
